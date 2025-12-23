@@ -14,10 +14,6 @@ export class WeatherService {
   ) {
     const key = this.configService.get<string>('WEATHER_API_KEY');
     
-    // console.log('🔑 Checking API Key...');
-    // console.log('Key exists:', !!key);
-    // console.log('Key length:', key?.length || 0);
-    // console.log('Key first 4 chars:', key?.substring(0, 4) || 'N/A');
     
     if (!key) {
       throw new Error('Weather api key not found!');
@@ -30,9 +26,8 @@ export class WeatherService {
   async getWeatherByCity(city: string) {
     try {
       const url = `${this.baseUrl}?q=${city}&appid=${this.apiKey}&units=metric`;
-      
       console.log('Fetching weather for:', city);
-      console.log('📡 API URL:', url.replace(this.apiKey, 'HIDDEN'));
+      console.log(' API URL:', url.replace(this.apiKey, 'HIDDEN'));
       const response = await firstValueFrom(
         this.httpService.get(url)
       );
@@ -50,9 +45,9 @@ export class WeatherService {
         windSpeed: response.data.wind.speed,
         visibility: response.data.visibility,
       };
-    } catch (error) {
-      // Detailed error logging
-      console.error('❌ Error fetching weather:');
+    } 
+    catch (error) {
+      console.error('Error fetching weather:');
       console.error('Error message:', error.message);
       console.error('Error code:', error.code);
       console.error('Response status:', error.response?.status);
@@ -64,7 +59,7 @@ export class WeatherService {
       
       if (error.response?.status === 401) {
         throw new HttpException(
-          'Invalid API key. Please check your WEATHER_API_KEY in .env file',
+          'Invalid API key',
           HttpStatus.UNAUTHORIZED
         );
       }
